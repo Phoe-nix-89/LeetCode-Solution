@@ -6,36 +6,43 @@ using namespace std;
 class Solution {
 public:
     int minimumPushes(string word) {
-        unordered_map<char,int> m;
+        vector<int> s(26,0);
         for(char c : word){
-            m[c]++;
+            s[c-'a']++;
         }
 
-        priority_queue<pair<int,char>> pq;
-        for(auto x : m){
-            pq.push({x.second,x.first});
-        }
+        int n = s.size();
+        if(n<=8) return word.length();
+
+        sort(s.begin(),s.end());
 
         int i = 1;
+        int c = 1;
         int ans = 0;
-        while(pq.size()){
-            auto x = pq.top();
-            pq.pop();
+        int j = s.size()-1;
+        while(j>=0){
+            if(s[j] == 0){
+                break;
+            }
 
-            if(i>=1 && i<=8){
-                ans += x.first;
+            
+            if(c<=8){
+                i=1;
             }
-            else if(i>=9 && i<=16){
-                ans += (2*x.first);
+            else if(c>=9 && c<=16){
+                i=2;
             }
-            else if(i>=17 && i<=24){
-                ans += (3*x.first);
+            else if(c>=17 && c<=24){
+                i=3;
             }
             else{
-                ans += (4*x.first);
+                i=4;
             }
 
-            i++;
+            ans += (i*s[j]);
+
+            c++;
+            j--;
         }
 
         return ans;
